@@ -11,8 +11,7 @@
 #define n_masses 3
 #define theta 2*PI/3.0
 #define rr RR*sqrt(3.0)
-//#define vv sqrt((11*G)/(3*rr))
-#define vv 0
+#define vv sqrt((11*G)/(3*rr))
 
 FLOAT norm( FLOAT vec1, FLOAT vec2, FLOAT vec3);
 FLOAT * allocate( int n );
