@@ -20,7 +20,7 @@
 #define mmyr_to_s 31556926*pow(10,9) 
 #define pc_to_m 3.08567758*pow(10,16)
 
-FLOAT norm( FLOAT vec1, FLOAT vec2, FLOAT vec3);
+FLOAT norm( FLOAT vec1, FLOAT vec2, http://nbviewer.ipython.org/FLOAT vec3);
 FLOAT *** allocate3d( int x, int y, int z );
 FLOAT ** allocate2d( int x, int y );
 void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOAT dt, int n_masses, int n_Masses );
@@ -222,7 +222,7 @@ int main( int argc, char **argv){
     fprintf( data_vel, "%le %le %le ", vm[0][i], vm[1][i], vm[2][i] ); 
 
   }
-  
+  i = n_masses-1;
   fprintf( data_evolve, "%le %le %le\n", rm[0][i], rm[1][i], rm[2][i] ); 
   fprintf( data_vel, "%le %le %le\n", vm[0][i], vm[1][i], vm[2][i] );
       
@@ -252,10 +252,11 @@ int main( int argc, char **argv){
       fprintf( data_vel, "%le %le %le ", vm[0][i], vm[1][i], vm[2][i] ); 
 
     }
-  
+    
+    i = n_masses-1;
     fprintf( data_evolve, "%le %le %le\n", rm[0][i], rm[1][i], rm[2][i] ); 
     fprintf( data_vel, "%le %le %le\n", vm[0][i], vm[1][i], vm[2][i] );
-  
+
   }
   
   fclose(data_evolve);
