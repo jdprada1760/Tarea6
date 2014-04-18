@@ -103,7 +103,7 @@ int main( int argc, char **argv){
   gen_velocities( M, r, v, n_masses );
   /*
    * Imprime las condiciones iniciales en el archivo IC.data
-   * Formato: ID x y z vx vy vz M
+   * Formato: ID x y z vx vy vz Mviaviaviaviaviavia
    */
 
   fprintf( data, "%d %le %le %le %le %le %le %le\n" , -seed*(10000000) , rx, ry, rz, vx, vy, vz, M );
@@ -157,8 +157,8 @@ void gen_random( FLOAT R, FLOAT **r, FLOAT n_masses ){
     rz = 1 - 2*drand48();
     // Normaliza el vector( genera vectores aleatorios en la superficie de una esfera de radio 1 )
     // Esto genera un vector de direcciones aleatorias, de norma 1
-    // Luego le asigna al vector una norma aleatoria entre 0 y R
-    normi = R*drand48()/sqrt( rx*rx + ry*ry + rz*rz );
+    // Luego le asigna al vector una norma aleatoria entre 0.01pc y R
+    normi = pow(10,-5) + (R-pow(10,-5))*drand48()/sqrt( rx*rx + ry*ry + rz*rz );
     rx *= normi;
     ry *= normi;
     rz *= normi;
