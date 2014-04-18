@@ -106,10 +106,10 @@ int main( int argc, char **argv){
    * Formato: ID x y z vx vy vz M
    */
 
-  fprintf( data, "%i %f %f %f %f %f %f %f\n" , -seed*(10000000) , rx, ry, rz, vx, vy, vz, M );
+  fprintf( data, "%d %le %le %le %le %le %le %le\n" , -seed*(10000000) , rx, ry, rz, vx, vy, vz, M );
 
   for( i = 0; i < n_masses; i++ ){
-    fprintf( data, "%i %f %f %f %f %f %f %f\n" , seed*(10000000) + (i+1) , r[0][i], r[1][i], r[2][i], v[0][i], v[1][i], v[2][i], 0.0 );
+    fprintf( data, "%d %le %le %le %le %le %le %le\n" , seed*(10000000) + (i+1) , r[0][i], r[1][i], r[2][i], v[0][i], v[1][i], v[2][i], 0.0 );
   }
  
   return 0;
