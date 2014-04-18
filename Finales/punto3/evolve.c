@@ -53,10 +53,6 @@ int main( int argc, char **argv){
   int n_Masses = 0;
   // El vector de masas grandes
   FLOAT *M;
-  // El vector de Identidades de masas pequeñas
-  int *idm;
-  // El vector de Identidades de masas grandes
-  int *idM;
   // El tiempo total de integracion (en años)
   FLOAT T;
   // El numero de iteraciones que se quiere sobre ese tiempo
@@ -92,8 +88,7 @@ int main( int argc, char **argv){
   if( id < 0 ){
 
     n_Masses++;
-    printf("M=%d",id);
-    
+       
   }else{
 
     n_masses++;
@@ -115,6 +110,8 @@ int main( int argc, char **argv){
 
   }while( test!=EOF );
  
+  
+  
   // Cierra el archivo y lo vuelve a abrir
   fclose(data);
   fopen(name,"r");
@@ -127,8 +124,6 @@ int main( int argc, char **argv){
    */
 
   M = malloc( n_Masses*sizeof(FLOAT) );
-  idm = malloc( n_masses*sizeof(int) );
-  idM = malloc( n_Masses*sizeof(int) );
   rm = allocate2d( n_masses, n_dim );
   rM = allocate2d( n_Masses, n_dim );
   vm = allocate2d( n_masses, n_dim );
@@ -148,7 +143,7 @@ int main( int argc, char **argv){
   test = fscanf(data, "%d %le %le %le %le %le %le %le\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4], &Temp[5], &Temp[6]);
   if( id < 0 ){
     
-    idM[Index] = id;
+    fprintf( data_id, "%d\n", id );
     rM[0][Index] = Temp[0];
     rM[1][Index] = Temp[1];
     rM[2][Index] = Temp[2];
@@ -160,7 +155,7 @@ int main( int argc, char **argv){
   
   }else{
     
-    idm[index] = id;
+    fprintf( data_id, "%d\n", id );
     rm[0][index] = Temp[0];
     rm[1][index] = Temp[1];
     rm[2][index] = Temp[2];
@@ -176,7 +171,7 @@ int main( int argc, char **argv){
     test = fscanf(data, "%d %le %le %le %le %le %le %le\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4], &Temp[5], &Temp[6]);
     if( id < 0 ){
       
-      idM[Index] = id;
+      fprintf( data_id, "%d\n", id );
       rM[0][Index] = Temp[0];
       rM[1][Index] = Temp[1];
       rM[2][Index] = Temp[2];
@@ -188,7 +183,7 @@ int main( int argc, char **argv){
       
     }else{
       
-      idm[index] = id;
+      fprintf( data_id, "%d\n", id );
       rm[0][index] = Temp[0];
       rm[1][index] = Temp[1];
       rm[2][index] = Temp[2];
@@ -196,7 +191,7 @@ int main( int argc, char **argv){
       vm[1][index] = Temp[4];
       vm[2][index] = Temp[5];
       index++;
-      printf("m=%d",id);
+
     }
   }while( test!=EOF );
       
@@ -211,11 +206,11 @@ int main( int argc, char **argv){
    * Imprime la evolucion de los parametros en los archivos
    * Formato: x y z vx vy vz
    */
-    
+  //printf("M: %d\nm: %d\nM: %le\n", n_Masses, n_masses, M[0]); 
+  
   for( i = 0; i < n_Masses; i++ ){
       
     // Escribe las posiciones y velocidades de n_masses
-    fprintf( data_id, "%d\n", idM[i] );
     fprintf( data_evolve, "%le %le %le ", rM[0][i], rM[1][i], rM[2][i] ); 
     fprintf( data_vel, "%le %le %le ", vM[0][i], vM[1][i], vM[2][i] ); 
   }
@@ -223,13 +218,11 @@ int main( int argc, char **argv){
   for( i = 0; i < n_masses - 1; i++ ){
     
     // Escribe las posiciones y velocidades de n_Mmasses
-    fprintf( data_id, "%d\n", idm[i] );
     fprintf( data_evolve, "%le %le %le ", rm[0][i], rm[1][i], rm[2][i] );
     fprintf( data_vel, "%le %le %le ", vm[0][i], vm[1][i], vm[2][i] ); 
 
   }
   
-  fprintf( data_id, "%d\n", idm[i] );
   fprintf( data_evolve, "%le %le %le\n", rm[0][i], rm[1][i], rm[2][i] ); 
   fprintf( data_vel, "%le %le %le\n", vm[0][i], vm[1][i], vm[2][i] );
       
@@ -248,7 +241,6 @@ int main( int argc, char **argv){
     for( i = 0; i < n_Masses; i++ ){
       
       // Escribe las posiciones y velocidades de n_masses
-      fprintf( data_id, "%d\n", idM[i] );
       fprintf( data_evolve, "%le %le %le ", rM[0][i], rM[1][i], rM[2][i] ); 
       fprintf( data_vel, "%le %le %le ", vM[0][i], vM[1][i], vM[2][i] ); 
     }
@@ -256,13 +248,11 @@ int main( int argc, char **argv){
     for( i = 0; i < n_masses - 1; i++ ){
     
       // Escribe las posiciones y velocidades de n_Mmasses
-      fprintf( data_id, "%d\n", idm[i] );
       fprintf( data_evolve, "%le %le %le ", rm[0][i], rm[1][i], rm[2][i] );
       fprintf( data_vel, "%le %le %le ", vm[0][i], vm[1][i], vm[2][i] ); 
 
     }
   
-    fprintf( data_id, "%d\n", idm[i] );
     fprintf( data_evolve, "%le %le %le\n", rm[0][i], rm[1][i], rm[2][i] ); 
     fprintf( data_vel, "%le %le %le\n", vm[0][i], vm[1][i], vm[2][i] );
   
@@ -272,6 +262,12 @@ int main( int argc, char **argv){
   fclose(data_vel);
   fclose(data_id);
   return 0;
+  free(M);
+  free(rm);
+  free(rM);
+  free(vm);
+  free(vM);
+
 }
 
 //**************************************************** 
@@ -356,6 +352,7 @@ void updateAcc( FLOAT **rm, FLOAT **rM, FLOAT **am, FLOAT  **aM, FLOAT *M, int n
       am[0][i] += grav*(rM[0][j] - rm[0][i]);
       am[1][i] += grav*(rM[1][j] - rm[1][i]);
       am[2][i] += grav*(rM[2][j] - rm[2][i]);
+      //printf("%le %le ",am[0][i], am[1][i]);
     }
   }
 }
