@@ -153,7 +153,7 @@ void gen_random( FLOAT R, FLOAT **r, FLOAT n_masses ){
     // Normaliza el vector( genera vectores aleatorios en la superficie de una esfera de radio 1 )
     // Esto genera un vector de direcciones aleatorias, de norma 1
     // Luego le asigna al vector una norma aleatoria entre 0.01pc y R
-    normi = 3*pow(10,0) + (R-3*pow(10,0))*drand48()/sqrt( rx*rx + ry*ry );
+    normi = 5*pow(10,0) + (R-5*pow(10,0))*drand48()/sqrt( rx*rx + ry*ry );
     rx *= normi;
     ry *= normi;
     // Agrega el vector aleatorio al vector inicial

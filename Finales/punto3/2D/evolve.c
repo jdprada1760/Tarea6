@@ -335,7 +335,7 @@ void updateAcc( FLOAT **rm, FLOAT **rM, FLOAT **am, FLOAT  **aM, FLOAT *M, int n
     am[1][i] = 0;
     for( j = 0; j < n_Masses; j++ ){
       // Actualizar las aceleraciones de cada Masa pequeña
-      FLOAT normi = pow(norm((rm[0][i] - rM[0][j]),(rm[1][i] - rM[1][j])),3) + pow(10,-3);
+      FLOAT normi = pow(norm((rm[0][i] - rM[0][j]),(rm[1][i] - rM[1][j])),3) + pow(10,-1);
       FLOAT grav = (G*M[j])/normi;
       am[0][i] += grav*(rM[0][j] - rm[0][i]);
       am[1][i] += grav*(rM[1][j] - rm[1][i]);
