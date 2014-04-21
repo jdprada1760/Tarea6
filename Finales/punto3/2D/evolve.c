@@ -109,6 +109,7 @@ int main( int argc, char **argv){
   // Cierra el archivo y lo vuelve a abrir
   fclose(data);
   fopen(name,"r");
+   
   //*******************************************************************************************************************
   //-------------------------------------------------------------------------------------------------------------------
   
@@ -184,7 +185,7 @@ int main( int argc, char **argv){
   // Cierra el archivo
   free(Temp);
   fclose(data);
-
+  
   //*******************************************************************************************************************
   //-------------------------------------------------------------------------------------------------------------------
   
@@ -220,16 +221,13 @@ int main( int argc, char **argv){
 
     }
     printf("LOL %d %d \n",k, (int)(N/4));
-    static const char *num = malloc(sizeof(char));
-    char *str = "evolve_";
-    printf("LOL %d %d \n",k, (int)(N/4));
-    num[0] = k;
-    printf("LOL %d %d \n",k, (int)(N/4));
-    strcat(str, &num);
-    printf("LOL %d %d \n",k, (int)(N/4));
-    strcat(str, ".dat");
-    printf("LOL %d %d \n",k, (int)(N/4));
-    data_evolve = fopen(str, "w");
+    char s[256] = "evolve_";
+    char *temp = malloc(2*sizeof(char));
+    temp[ 0 ] = '0' + k;
+    temp[ 1 ] = '\0';
+    strcat( s, temp ); 
+    strcat( s, ".dat");
+    data_evolve = fopen(s, "w");
     for( i = 0; i < n_Masses; i++ ){
 	
       // Escribe las posiciones y velocidades de n_masses
@@ -243,12 +241,9 @@ int main( int argc, char **argv){
       fprintf( data_evolve, "%d %f %f %f %f\n", idm[i],(float) rm[0][i],(float) rm[1][i],(float) vm[0][i],(float) vm[1][i] );
 	
     }
-    free(str);
-    free(num);
     fclose(data_evolve);
 
   }
-
   free(M);
   free(rm);
   free(rM);
@@ -516,6 +511,15 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
     free(krm[q]);
     free(kvm[q]);
   }
+
+  for( w = 0; w < 2; w++){
+    free(newRM[w]); 
+  }
+  
+  for( w = 0; w < 2; w++){
+    free(newRm[w]); 
+  }
+
   for(q = 0; q < 4; q++){
     for( w = 0; w < 2; w++){
       free(krM[q][w]);
@@ -524,8 +528,11 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
     free(krM[q]);
     free(kvM[q]);
   }
+ 
   free(krm);
   free(krM);
   free(kvm);
   free(kvM);
+  free(newRm);
+  free(newRM);
 }
