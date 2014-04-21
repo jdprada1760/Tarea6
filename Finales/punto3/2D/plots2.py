@@ -3,57 +3,41 @@ import matplotlib.pyplot as plt
 import sys
 
 # Contiene todas las graficas convertidas a python structures
-totalData = []
+totalGraphs = []
 
 # Obtiene cada archivo pasado por parametro
 i = 0
 j = 0
 for i in range(1,len(sys.argv)):
-    temp = np.array( np.loadtxt(sys.argv[i]) )
-    temp = temp.T
-    # Prepara los datos en un mejor formato para graficarlos
-    dataTemp = []
-    for j in range(0,(len(temp)-1)/2):
-        dataTemp.append(np.array(temp[[2*j,2*j+1]]).T)
-       
-    dataTemp = np.array(dataTemp)
-    totalData.append(dataTemp)
+    temp = np.loadtxt(sys.argv[i]).T[1:-1]
+    totalGraphs.append(temp)
 
-totalData = np.array(totalData)
+totalGraphs = np.array(totalGraphs)
 # Grafica
 i = 0
-for i in range(len(totalData)):
-    for j in range(5):
-	lim = 110
-        x_t = totalData[i]
-        N_trajectories = len(x_t)
-        fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.set_xlabel("X_kpc")
-        ax.set_ylabel("Y_kpc")
-	ax.set_xlim((-lim, lim))
-	ax.set_ylim((-lim, lim))		
-        k = 0
-        n = int(j*(len(x_t[0])-2)/4) +1
-        for k in range(100):
-	    mid = (len(x_t)/2)
-            #x = x_t[mid+k][:n].T
-            xs = x_t[mid+k][n]
-            #plt.plot(x[0],x[1])
-            plt.scatter(xs[0],xs[1], c = "r")
-
-	for k in range(100):
-	    #x = x_t[k][:n].T
-            xs = x_t[k][n]
-            #plt.plot(x[0],x[1])
-            plt.scatter(xs[0],xs[1], c = "b")
-
-        xs = x_t[0][n]
-	plt.scatter(xs[0],xs[1], c = "g", s = 200 )
-        xs = x_t[1][n]
-	plt.scatter(xs[0],xs[1], c = "g", s = 200)
+for i in range(len(totalGraphs)):
+    lim = 200
+    x_t = totalGraphs[i]
+    N_trajectories = len(x_t)
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
+    ax.set_xlabel("X_kpc")
+    ax.set_ylabel("Y_kpc")
+    ax.set_xlim((-lim, lim))
+    ax.set_ylim((-lim, lim))		
+    k = 0
+    n_points = 1000
+    xs = x_t[0][2:2+n_points]
+    ys = x_t[1][2:2+n_points]
+    ax.scatter(xs,ys, c = "b", alpha = 0.7)
+    x2s = x_t[0][-n_points:-1]
+    y2s = x_t[1][-n_points:-1]
+    ax.scatter(x2s,y2s, c = "r", alpha = 0.7)
+    x3s = x_t[0][0:2]
+    y3s = x_t[1][0:2]
+    ax.scatter(x3s,y3s, c = "g", s = 200)
 	   
-        # Guarda la grafica
-        filename = sys.argv[i+1] + "___" + str(j+1)
-        plt.savefig(filename + '.pdf',format = 'pdf', transparent=True)
-        plt.close()
+    # Guarda la grafica
+    filename = sys.argv[i+1]
+    plt.savefig(filename + '.pdf',format = 'pdf', transparent=True)
+    plt.close()

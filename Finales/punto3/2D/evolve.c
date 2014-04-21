@@ -2,13 +2,11 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-
 /*
  * Define las constantes necesarias
  */
-
-#define PI 3.14159265358979323846
-#define FLOAT double
+#define FLOAT float
+#define form "%f"
 #define manual 'Ejecutar de la forma ./evolve.c N T filename'
 
 // La constante gravitacional en unidades de masa solar, kpc y miles de millones de años
@@ -44,9 +42,9 @@ int main( int argc, char **argv){
   FILE *data;
   // Los archivos donde se guardara la evolucion
   FILE *data_evolve;
-  FILE *data_vel;
-  // El archivo donde se guardaran los ids
-  FILE *data_id;
+  // Los vectores de identidad
+  int *idm;
+  int *idM;
   // El numero de masas pequeñas
   int n_masses = 0;
   // El numero de masas grandes
@@ -72,9 +70,6 @@ int main( int argc, char **argv){
   
   // El archivo de texto de condiciones iniciales y de evolucion en el tiempo
   data = fopen( name, "r" );
-  data_evolve = fopen( "evolve.dat", "w" );
-  data_id = fopen( "id.dat", "w" );
-  data_vel = fopen( "evolve_vel.dat", "w" );
 
   //-------------------------------------------------------------------------------------------------------------------
   //*******************************************************************************************************************
@@ -82,9 +77,9 @@ int main( int argc, char **argv){
   /*
    * Lee el archivo y determina el numero de masas pequeñas y el numero de masas grandes (para poder apartar memoria)
    */
-  FLOAT tmp1;
+  float tmp1;
   int id;
-  int test = fscanf(data, "%d %le %le %le %le %le\n", &id, &tmp1, &tmp1, &tmp1, &tmp1, &tmp1);
+  int test = fscanf(data, "%d %f %f %f %f %f\n", &id, &tmp1, &tmp1, &tmp1, &tmp1, &tmp1);
   if( id < 0 ){
 
     n_Masses++;
@@ -97,7 +92,7 @@ int main( int argc, char **argv){
   
   do{
     
-    test = fscanf(data, "%d %le %le %le %le %le\n", &id, &tmp1, &tmp1, &tmp1, &tmp1, &tmp1);
+    test = fscanf(data, "%d %f %f %f %f %f\n", &id, &tmp1, &tmp1, &tmp1, &tmp1, &tmp1);
     if( id < 0 ){
 
       n_Masses++;
@@ -126,7 +121,8 @@ int main( int argc, char **argv){
   rM = allocate2d( n_Masses, n_dim );
   vm = allocate2d( n_masses, n_dim );
   vM = allocate2d( n_Masses, n_dim );
-
+  idm = malloc( n_masses*sizeof(int) );
+  idM = malloc( n_Masses*sizeof(int) );
   
   //-------------------------------------------------------------------------------------------------------------------
   //*******************************************************************************************************************
@@ -135,51 +131,51 @@ int main( int argc, char **argv){
    * Lee el archivo de nuevo y asigna los valores iniciales de posicion y velocidad, ademas del vector de masas
    */
 
-  FLOAT *Temp = malloc( 5*sizeof(FLOAT));
+  float *Temp = malloc( 5*sizeof(float));
   int index = 0;
   int Index = 0;
-  test = fscanf(data, "%d %le %le %le %le %le\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4]);
+  test = fscanf(data, "%d %f %f %f %f %f\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4]);
   if( id < 0 ){
     
-    fprintf( data_id, "%d\n", id );
-    rM[0][Index] = Temp[0];
-    rM[1][Index] = Temp[1];
-    vM[0][Index] = Temp[2];
-    vM[1][Index] = Temp[3];
-    M[Index] = Temp[4];
+    idM[Index] = id;
+    rM[0][Index] = (FLOAT) Temp[0];
+    rM[1][Index] = (FLOAT) Temp[1];
+    vM[0][Index] = (FLOAT) Temp[2];
+    vM[1][Index] = (FLOAT) Temp[3];
+    M[Index] = (FLOAT) Temp[4];
     Index++;
   
   }else{
     
-    fprintf( data_id, "%d\n", id );
-    rm[0][index] = Temp[0];
-    rm[1][index] = Temp[1];
-    vm[0][index] = Temp[2];
-    vm[1][index] = Temp[3];
+    idm[index] = id;
+    rm[0][index] = (FLOAT) Temp[0];
+    rm[1][index] = (FLOAT) Temp[1];
+    vm[0][index] = (FLOAT) Temp[2];
+    vm[1][index] = (FLOAT) Temp[3];
     index++;
     
   }
   
   do{
   
-    test = fscanf(data, "%d %le %le %le %le %le\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4]);
+    test = fscanf(data, "%d %f %f %f %f %f\n", &id, &Temp[0], &Temp[1], &Temp[2], &Temp[3], &Temp[4]);
     if( id < 0 ){
       
-      fprintf( data_id, "%d\n", id );
-      rM[0][Index] = Temp[0];
-      rM[1][Index] = Temp[1];
-      vM[0][Index] = Temp[2];
-      vM[1][Index] = Temp[3];
-      M[Index] = Temp[4];
+      idM[Index] = id;
+      rM[0][Index] = (FLOAT) Temp[0];
+      rM[1][Index] = (FLOAT) Temp[1];
+      vM[0][Index] = (FLOAT) Temp[2];
+      vM[1][Index] = (FLOAT) Temp[3];
+      M[Index] = (FLOAT) Temp[4];
       Index++;
       
     }else{
       
-      fprintf( data_id, "%d\n", id );
-      rm[0][index] = Temp[0];
-      rm[1][index] = Temp[1];
-      vm[0][index] = Temp[2];
-      vm[1][index] = Temp[3];
+      idm[index] = id;
+      rm[0][index] = (FLOAT) Temp[0];
+      rm[1][index] = (FLOAT) Temp[1];
+      vm[0][index] = (FLOAT) Temp[2];
+      vm[1][index] = (FLOAT) Temp[3];
       index++;
 
     }
@@ -197,67 +193,68 @@ int main( int argc, char **argv){
    * Formato: x y z vx vy vz
    */
   //printf("M: %d\nm: %d\nM: %le\n", n_Masses, n_masses, M[0]); 
-  
+  data_evolve = fopen("evolve_1.dat", "w");
   for( i = 0; i < n_Masses; i++ ){
-      
+	
     // Escribe las posiciones y velocidades de n_masses
-    fprintf( data_evolve, "%le %le ", rM[0][i], rM[1][i] ); 
-    fprintf( data_vel, "%le %le ", vM[0][i], vM[1][i] ); 
+    fprintf( data_evolve, "%d %f %f %f %f\n", idM[i],(float) rM[0][i],(float) rM[1][i],(float) vM[0][i],(float) vM[1][i] ); 
+    
   }
-    
-  for( i = 0; i < n_masses - 1; i++ ){
-    
+  
+  for( i = 0; i < n_masses; i++ ){  
     // Escribe las posiciones y velocidades de n_Mmasses
-    fprintf( data_evolve, "%le %le ", rm[0][i], rm[1][i] );
-    fprintf( data_vel, "%le %le ", vm[0][i], vm[1][i] ); 
-
-  }
-  i = n_masses-1;
-  fprintf( data_evolve, "%le %le\n", rm[0][i], rm[1][i] ); 
-  fprintf( data_vel, "%le %le\n", vm[0][i], vm[1][i] );
-      
+    fprintf( data_evolve, "%d %f %f %f %f\n", idm[i],(float) rm[0][i],(float) rm[1][i],(float) vm[0][i], (float)vm[1][i] );
+    
+  }  
+  fclose(data_evolve);
+    
   /*
    *  Método Runge-Kutta 4to orden sobre el equiespaciado temporal
    */
   int j;
-  for( j = 0; j < N; j++ ){
-    rungeKutta4( rm, vm, rM, vM, M, dt, n_masses, n_Masses );
+  int k;
+  for( k = 1; k < 5; k++){
+    for( j = 0; j < (int)(N/4); j++ ){
       
-    /*
-     * Imprime la evolucion de los parametros en los archivos
-     * Formato: x y z vx vy vz
-     */
-    
-    for( i = 0; i < n_Masses; i++ ){
-      
-      // Escribe las posiciones y velocidades de n_masses
-      fprintf( data_evolve, "%le %le ", rM[0][i], rM[1][i] ); 
-      fprintf( data_vel, "%le %le ", vM[0][i], vM[1][i] ); 
-    }
-    
-    for( i = 0; i < n_masses - 1; i++ ){
-    
-      // Escribe las posiciones y velocidades de n_Mmasses
-      fprintf( data_evolve, "%le %le ", rm[0][i], rm[1][i] );
-      fprintf( data_vel, "%le %le ", vm[0][i], vm[1][i] ); 
+      rungeKutta4( rm, vm, rM, vM, M, dt, n_masses, n_Masses );
 
     }
-    
-    i = n_masses-1;
-    fprintf( data_evolve, "%le %le\n", rm[0][i], rm[1][i] ); 
-    fprintf( data_vel, "%le %le\n", vm[0][i], vm[1][i] );
+    printf("LOL %d %d \n",k, (int)(N/4));
+    static const char *num = malloc(sizeof(char));
+    char *str = "evolve_";
+    printf("LOL %d %d \n",k, (int)(N/4));
+    num[0] = k;
+    printf("LOL %d %d \n",k, (int)(N/4));
+    strcat(str, &num);
+    printf("LOL %d %d \n",k, (int)(N/4));
+    strcat(str, ".dat");
+    printf("LOL %d %d \n",k, (int)(N/4));
+    data_evolve = fopen(str, "w");
+    for( i = 0; i < n_Masses; i++ ){
+	
+      // Escribe las posiciones y velocidades de n_masses
+      fprintf( data_evolve, "%d %f %f %f %f\n", idM[i], (float)rM[0][i],(float) rM[1][i],(float) vM[0][i],(float) vM[1][i] ); 
+   
+    }
+      
+    for( i = 0; i < n_masses; i++ ){
+	
+      // Escribe las posiciones y velocidades de n_Mmasses
+      fprintf( data_evolve, "%d %f %f %f %f\n", idm[i],(float) rm[0][i],(float) rm[1][i],(float) vm[0][i],(float) vm[1][i] );
+	
+    }
+    free(str);
+    free(num);
+    fclose(data_evolve);
 
   }
-  
-  fclose(data_evolve);
-  fclose(data_vel);
-  fclose(data_id);
-  return 0;
+
   free(M);
   free(rm);
   free(rM);
   free(vm);
   free(vM);
+  return 0;
 
 }
 
@@ -297,13 +294,12 @@ FLOAT ** allocate2d( int x, int y ){
 FLOAT *** allocate3d( int x, int y, int z ){
   // Guarda memoria para contener punteros
   FLOAT ***r = malloc( z*sizeof(FLOAT**) );
-  int i;
-  int j;
+  int i,j;
   // Guarda memoria para cada puntero contenido en cada casilla
   for( i = 0; i < z ; i++){
-    r[i] = malloc( y*sizeof(FLOAT*) );
-    for( j = 0; j < y; j++ ){
-      r[i][j] = malloc( x*sizeof(FLOAT) );
+    r[i] = malloc(y*sizeof(FLOAT));
+    for( j = 0; j < y; j++){
+      r[i][j] = malloc(x*sizeof(FLOAT));
     }
   }
   return r;
@@ -361,7 +357,7 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
   newRm = allocate2d( n_masses, n_dim );
   newRM = allocate2d( n_Masses, n_dim );
   krm = allocate3d( n_masses, n_dim, 4 );
-  krM = allocate3d( n_Masses, n_dim, 4 );
+  krM = allocate3d( n_Masses, n_dim, 4 );  
   kvm = allocate3d( n_masses, n_dim, 4 );
   kvM = allocate3d( n_Masses, n_dim, 4 );
 
@@ -378,11 +374,11 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
    */
 
   for( i = 0; i < n_Masses; i++ ){
-
+     
     // RungeKutta 1st step for n_Masses
     krM[0][0][i] = vM[0][i];
     krM[0][1][i] = vM[1][i];
-
+      
   }
 
   for( i = 0; i < n_masses; i++ ){
@@ -395,7 +391,6 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
   
   // Actualiza las aceleraciones para el primer paso de RungeKutta
   updateAcc( rm, rM, kvm[0], kvM[0], M, n_masses, n_Masses );
-
   /*
    * Rungekutta 2nd step
    */
@@ -511,7 +506,24 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
     vm[1][i] = vm[1][i] + kmean*dt;
 
   }
-  
+
+  int q,w;
+  for(q = 0; q < 4; q++){
+    for( w = 0; w < 2; w++){
+      free(krm[q][w]);
+      free(kvm[q][w]);
+    }
+    free(krm[q]);
+    free(kvm[q]);
+  }
+  for(q = 0; q < 4; q++){
+    for( w = 0; w < 2; w++){
+      free(krM[q][w]);
+      free(kvM[q][w]);
+    }
+    free(krM[q]);
+    free(kvM[q]);
+  }
   free(krm);
   free(krM);
   free(kvm);
