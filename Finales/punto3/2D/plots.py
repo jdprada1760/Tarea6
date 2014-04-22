@@ -23,7 +23,7 @@ totalData = np.array(totalData)
 # Grafica
 i = 0
 for i in range(len(totalData)):
-    for j in range(5):
+    for j in range(3):
 	lim = 21
         x_t = totalData[i]
         N_trajectories = len(x_t)
