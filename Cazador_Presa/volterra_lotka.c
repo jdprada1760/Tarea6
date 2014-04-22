@@ -66,7 +66,7 @@ int main(int argc, char **argv){
 
     for(i=0; i<n_points; i++){
 
-      printf("%f\n", h);
+      // printf("%f\n", h);
 
       RK4(x_t, y_t, h);
 
