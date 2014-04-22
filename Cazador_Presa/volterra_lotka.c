@@ -6,19 +6,19 @@
   /*
     Ecuacion diferencial: dx/dt
   */
-FLOAT xprime(FLOAT y, FLOAT x );
+FLOAT xprime(FLOAT x, FLOAT y );
 
 
   /*
     Ecuacion diferencial: dy/dt
   */
-FLOAT yprime(FLOAT y, FLOAT x);
+FLOAT yprime(FLOAT x, FLOAT y);
 
 
   /*
     Runge-Kutta: cuarto orden
   */
-FLOAT RK4(FLOAT *vecx, FLOAT *vecy, FLOAT h);
+void RK4(FLOAT *vecx, FLOAT *vecy, FLOAT h);
 
 
 /*----------------------- MAIN-----------------------*/
@@ -66,7 +66,7 @@ int main(int argc, char **argv){
 
     for(i=0; i<n_points; i++){
 
-      //printf("LOL\n");
+      // printf("%f\n", h);
 
       RK4(x_t, y_t, h);
 
@@ -84,7 +84,7 @@ int main(int argc, char **argv){
 
   return 0;
 
-  }
+}
 /*----------------------------------------------------*/
 
 
@@ -110,7 +110,7 @@ FLOAT yprime(FLOAT x, FLOAT y){
 
 }
 
-FLOAT RK4(FLOAT *vecx, FLOAT *vecy, FLOAT h){
+void RK4(FLOAT *vecx, FLOAT *vecy, FLOAT h){
 
   int i = 0;
 
@@ -125,20 +125,20 @@ FLOAT RK4(FLOAT *vecx, FLOAT *vecy, FLOAT h){
     
     FLOAT x_1 = x + (h/2.0) * k_1_x;
     FLOAT y_1 = y + (h/2.0) * k_1_y;
-    FLOAT k_2_x = xprime(y_1, x_1);
-    FLOAT k_2_y = yprime(y_1, x_1);
+    FLOAT k_2_x = xprime(x_1, y_1);
+    FLOAT k_2_y = yprime(x_1, y_1);
     
     // second step
     FLOAT x_2 = x + (h/2.0) * k_2_x;
     FLOAT y_2 = y + (h/2.0) * k_2_y;
-    FLOAT k_3_x = xprime(y_2, x_2);
-    FLOAT k_3_y = yprime(y_2, x_2);
+    FLOAT k_3_x = xprime(x_2, y_2);
+    FLOAT k_3_y = yprime(x_2, y_2);
         
     // third step
     FLOAT x_3 = x + h * k_3_x;
     FLOAT y_3 = y + h * k_3_y;
-    FLOAT k_4_x = xprime(y_3, x_3);
-    FLOAT k_4_y = yprime(y_3, x_3);
+    FLOAT k_4_x = xprime(x_3, y_3);
+    FLOAT k_4_y = yprime(x_3, y_3);
     
     // fourth step
     FLOAT average_k_x = (1.0/6.0)*(k_1_x + 2.0*k_2_x + 2.0*k_3_x + k_4_x);

@@ -1,13 +1,12 @@
-all: plot_solutions.py
+all: datass.dat
 
-plot_solution.py : datass.o a.o 
+datass.dat : volterra_lotka.x
+	./volterra_lotka.x 30 20 0.0001
 	python plot_solutions.py
-
-datass.o : datass.dat
-	./a.o
-
-a.o : a.out
-	cc -lm volterra_lotka.c
+	rm -f *.x
+	rm -f *.dat
+volterra_lotka.x : volterra_lotka.c
+	cc volterra_lotka.c -o volterra_lotka.x -lm 
 
 clean :
 	rm -f *.o
