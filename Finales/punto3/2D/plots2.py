@@ -16,7 +16,7 @@ totalGraphs = np.array(totalGraphs)
 # Grafica
 i = 0
 for i in range(len(totalGraphs)):
-    lim = 200
+    lim = 300
     x_t = totalGraphs[i]
     N_trajectories = len(x_t)
     fig = plt.figure()
@@ -29,10 +29,10 @@ for i in range(len(totalGraphs)):
     n_points = 1000
     xs = x_t[0][2:2+n_points]
     ys = x_t[1][2:2+n_points]
-    ax.scatter(xs,ys, c = "b", alpha = 0.7)
+    ax.scatter(xs,ys, c = "b", alpha = 0.7, s = 5)
     x2s = x_t[0][-n_points:-1]
     y2s = x_t[1][-n_points:-1]
-    ax.scatter(x2s,y2s, c = "r", alpha = 0.7)
+    ax.scatter(x2s,y2s, c = "r", alpha = 0.7, s = 5)
     x3s = x_t[0][0:2]
     y3s = x_t[1][0:2]
     ax.scatter(x3s,y3s, c = "g", s = 200)

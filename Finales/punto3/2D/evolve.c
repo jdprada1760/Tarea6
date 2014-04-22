@@ -194,7 +194,7 @@ int main( int argc, char **argv){
    * Formato: x y z vx vy vz
    */
   //printf("M: %d\nm: %d\nM: %le\n", n_Masses, n_masses, M[0]); 
-  data_evolve = fopen("evolve_1.dat", "w");
+  data_evolve = fopen("evolve_d_1.dat", "w");
   for( i = 0; i < n_Masses; i++ ){
 	
     // Escribe las posiciones y velocidades de n_masses
@@ -221,9 +221,9 @@ int main( int argc, char **argv){
 
     }
     printf("LOL %d %d \n",k, (int)(N/4));
-    char s[256] = "evolve_";
+    char s[256] = "evolve_d_";
     char *temp = malloc(2*sizeof(char));
-    temp[ 0 ] = '0' + k;
+    temp[ 0 ] = '0' + (k+1);
     temp[ 1 ] = '\0';
     strcat( s, temp ); 
     strcat( s, ".dat");
@@ -502,6 +502,7 @@ void rungeKutta4( FLOAT **rm, FLOAT **vm, FLOAT **rM, FLOAT **vM, FLOAT *M, FLOA
 
   }
 
+  // Libera memoria
   int q,w;
   for(q = 0; q < 4; q++){
     for( w = 0; w < 2; w++){
