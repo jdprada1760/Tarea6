@@ -12,10 +12,10 @@ evolve.x: IC.x evolve.c
 	cc evolve.c -o evolve.x -lm
 
 data1.dat: IC.x
-	./IC.x 0 0 0 0 100000 1000000000000 100 56 data1.dat
+	./IC.x 0 0 0 0 100000 100000000000 100 56 data1.dat
 
 data2.dat: IC.x
-	./IC.x 150 200 0 -100 100000 1000000000000 100 82 data2.dat
+	./IC.x 150 200 0 -100 100000 100000000000 100 82 data2.dat
 
 IC.x:	IC.c
 	cc IC.c -o IC.x -lm
