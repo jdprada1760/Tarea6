@@ -3,13 +3,14 @@
 #include <string.h>
 #include <stdio.h>
 #define PI 3.14159265358979323846
-#define FLOAT double
+#define FLOAT float
 // Constante gravitacional en parsecs, masas solares y decenas de millones de años
-#define G 0.4499561119
-#define T 100.0
+#define G 4.49956*pow(10,-3)
+#define T 1.0
 #define RR 20.0
 #define n_dim 3
-#define n_masses 1000
+#define n_masses 10000
+#define lim 0.05
 
 FLOAT norm( FLOAT vec1, FLOAT vec2, FLOAT vec3);
 FLOAT * allocate( int n );
@@ -66,13 +67,13 @@ int main(int argc, char **argv){
   data1 = fopen("colapso1.data", "w");
   for( k = 0; k < n_masses; k++){
 
-    fprintf(data1, "%le %le %le\n",r[0][k],r[1][k],r[2][k]);
+    fprintf(data1, "%f %f %f\n",r[0][k],r[1][k],r[2][k]);
   
   }
 
   fclose(data1);
-  fprintf(energy_dat, "%le\n", energy);
-  fprintf(virial_dat, "%le\n", virialTerm);
+  fprintf(energy_dat, "%f\n", energy);
+  fprintf(virial_dat, "%f\n", virialTerm);
   FLOAT N = T/dt;
   int q,j;
   for( q = 1; q < 5; q++){
@@ -88,8 +89,8 @@ int main(int argc, char **argv){
       energy = calcEnergy(r,v,m);
       virialTerm = calcVirial(r,v,m);
       // Escribe en el archivo
-      fprintf(energy_dat, "%le\n", energy);
-      fprintf(virial_dat, "%le\n", virialTerm);
+      fprintf(energy_dat, "%f\n", energy);
+      fprintf(virial_dat, "%f\n", virialTerm);
     }
     
     printf("LOL %d %d \n",q, (int)(N/4));
@@ -103,7 +104,7 @@ int main(int argc, char **argv){
     int k;
     for( k = 0; k < n_masses; k++){
       
-      fprintf(data1, "%le %le %le\n",r[0][k],r[1][k],r[2][k]);
+      fprintf(data1, "%f %f %f\n",r[0][k],r[1][k],r[2][k]);
       
     }
     fclose(data1);
@@ -218,7 +219,7 @@ void updateAcc( FLOAT **r, FLOAT **a , FLOAT *m ){
     for( j = 0; j < n_masses; j++ ){
       if( i != j ){
 	FLOAT normi = norm((r[0][i] - r[0][j]),(r[1][i] - r[1][j]),(r[2][i] - r[2][j]));
-	if( normi > 0.01 ){
+	if( normi > lim ){
 	  normi = normi*normi*normi;
 	  FLOAT grav = (G*m[j])/normi;
 	  a[0][i] += grav*(r[0][j] - r[0][i]);
@@ -395,7 +396,7 @@ FLOAT calcEnergy(FLOAT **r, FLOAT **v, FLOAT *m){
 	ener += -G*m[i]*m[j]/normi;
       }
       else{
-	ener += -G*m[i]*m[j]/(0.01);
+	ener += -G*m[i]*m[j]/(lim);
       }
     } 
   }
@@ -414,11 +415,11 @@ FLOAT calcVirial(FLOAT **r, FLOAT **v, FLOAT *m){
     ener += m[i]*v[2][i]*v[2][i];
     for( j = i-1; j >= 0 ; j--){
       FLOAT normi = norm((r[0][i] - r[0][j]),(r[1][i] - r[1][j]),(r[2][i] - r[2][j]));
-      if( normi > 0.01 ){
+      if( normi > lim ){
 	ener += -G*m[i]*m[j]/normi;
       }
       else{
-	ener += -G*m[i]*m[j]/(0.01);
+	ener += -G*m[i]*m[j]/(lim);
       }
     } 
   }

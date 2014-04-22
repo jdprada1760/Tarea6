@@ -32,16 +32,17 @@ for i in range(len(data)):
     ax.scatter(temp[0],temp[1], s = 5, alpha = 0.5, c = 'b')
     
     # Guarda la grafica
-    filename = "colapso_Gravitacional" + str(j+1)
+    filename = "colapso_Gravitacional" + str(i+1)
     plt.savefig(filename + '.pdf',format = 'pdf', transparent=True)
     plt.close()
 
 # Grafica las diferencias de energia
 
-energy = abs((energy[0:-2] - energy[1:-1])/energy[0:-2)
+energy = abs((energy[0:-2] - energy[1:-1])/energy[0:-2])
+#energy = energy[np.where( energy )]
 fig = plt.figure()
 ax = fig.add_subplot(111)
-ax.set_xlabel("dE/E")
+ax.set_ylabel("dE/E")
 ax.plot(np.arange(0,len(energy)),energy)
 plt.savefig("Energy_evol" + '.pdf',format = 'pdf', transparent=True)
 plt.close()
